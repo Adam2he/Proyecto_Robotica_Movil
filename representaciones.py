@@ -130,3 +130,23 @@ def representar2d(k,N,obstacle,R_soi,goal,F,M):
     plt.show()
 
 
+def mapa_y_camino(datos,goal,obstacle):
+    # Crear una figura 3D
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    i=0
+    while i+2 < len(datos):
+        x = datos[i]
+        y = datos[i+1]
+        z = datos[i+2]
+        i+=3
+
+        # Dibujar el punto
+        ax.scatter(x, y, z, color='b',s=1)  # 's' es el tamaño del punto
+    ax.scatter(goal[0], goal[1], goal[2], color='g', s=100)
+    for i in range(len(obstacle)):
+        ax.scatter(obstacle[i][0], obstacle[i][1], obstacle[i][2], color='r', s=100)
+
+    # Mostrar el gráfico
+    plt.show()
+
