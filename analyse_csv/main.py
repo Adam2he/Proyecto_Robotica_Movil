@@ -43,7 +43,7 @@ if __name__ == '__main__':
     # print("N_min: ", N_min)
     # print("N_max: ", N_max)
 
-    # Calculating n_cols authomatically
+    # Calculating n_cols automatically
     n_cols=1
     while(n_rows*n_cols<N_max-N_min+1):
         n_cols+=1
