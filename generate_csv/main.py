@@ -1,9 +1,9 @@
 import numpy
 
-from generate_csv/representaciones import *
-from generate_csv/calculo_puntos import *
-from generate_csv/funciones_mapas import *
-from generate_csv/planificador import *
+from representaciones import *
+from calculo_puntos import *
+from funciones_mapas import *
+from planificador import *
 
 
 from numpy import *
