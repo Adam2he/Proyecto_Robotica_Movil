@@ -11,7 +11,7 @@ if __name__ == '__main__':
     ############### INSERT HERE ###############
 
     # Insert here the name of the csv file
-    filename = "data_file6.csv"
+    filename = "generate_csv/data_file6.csv"
 
     # Insert here the number of figure rows
     n_rows=2
@@ -43,7 +43,7 @@ if __name__ == '__main__':
     # print("N_min: ", N_min)
     # print("N_max: ", N_max)
 
-    # Calculating n_cols automatically
+    # Calculating n_cols authomatically
     n_cols=1
     while(n_rows*n_cols<N_max-N_min+1):
         n_cols+=1
@@ -111,4 +111,6 @@ if __name__ == '__main__':
                 axs2[int((N-N_min)/n_cols)][(N-N_min)%n_cols].scatter(densidad, distancia, color='g', s=3)
             else:
                 axs2[int((N-N_min)/n_cols)][(N-N_min)%n_cols].scatter(densidad, distancia, color='r', s=3)
+    fig.savefig('analyse_csv/steps_number.png')
+    fig2.savefig('analyse_csv/convergence.png')
     plt.show()
