@@ -40,16 +40,16 @@ if __name__ == '__main__':
             if (N>N_max):
                 N_max=N
             
-    # print("N_min: ", N_min)
-    # print("N_max: ", N_max)
+    print("N_min: ", N_min)
+    print("N_max: ", N_max)
 
     # Calculating n_cols authomatically
     n_cols=1
     while(n_rows*n_cols<N_max-N_min+1):
         n_cols+=1
-    # print("n_cols: ", n_cols)
+    print("n_cols: ", n_cols)
 
-    fig, axs = plt.subplots(n_rows, n_cols, subplot_kw={'projection': '3d'}, figsize=(24, 24))
+    fig, axs = plt.subplots(n_rows, n_cols, subplot_kw={'projection': '3d'}, figsize=(24, 24), squeeze=False)
     fig.suptitle('Comparativa entre densidad de obstáculos, distancia entre origen y destino, y número de pasos del algoritmo')
     for i in range(n_rows):
         for j in range(n_cols):
@@ -66,7 +66,7 @@ if __name__ == '__main__':
             
     
 
-    fig2, axs2 = plt.subplots(n_rows, n_cols, figsize=(24, 24))
+    fig2, axs2 = plt.subplots(n_rows, n_cols, figsize=(24, 24), squeeze=False)
     fig2.suptitle('Comparativa entre casos de convergencia y de no convergencia')
     for i in range(n_rows):
         for j in range(n_cols):
