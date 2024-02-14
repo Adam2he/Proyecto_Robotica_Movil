@@ -25,6 +25,29 @@ def planificador(posicion,goal,m,F):
         datos+=posicion
     return datos
 
+
+def planificador2(posicion,goal,m,F,N):
+    k=0
+    posicionA=posicion
+    while calcula_distancia(posicion,goal) > m:
+        try:
+            posicion[0] = posicion[0] + F[round(posicion[0])][round(posicion[1])][round(posicion[2])][0]
+        except:
+            posicion[0] = posicionA[0]
+        try:
+            posicion[1] = posicion[1] + F[round(posicion[0])][round(posicion[1])][round(posicion[2])][1]
+        except:
+            posicion[1] = posicionA[1]
+        try:
+            posicion[2] = posicion[2] + F[round(posicion[0])][round(posicion[1])][round(posicion[2])][2]
+        except:
+            posicion[2] = posicionA[2]
+        posicionA = posicion
+        k+=1
+        if k>300:
+            return False
+    return True
+
 def planificador_con_representacion(posicion,goal,m,F,obstacle):
     # Crear una figura 3D
     fig = plt.figure()
