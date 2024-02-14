@@ -1,5 +1,6 @@
 import math
 import csv
+import numpy as np
 
 import ast
 
@@ -11,10 +12,10 @@ if __name__ == '__main__':
     ############### INSERT HERE ###############
 
     # Insert here the name of the csv file
-    filename = "generate_csv/data_file6.csv"
+    filename = "generate_csv/data_file7.csv"
 
     # Insert here the number of figure rows
-    n_rows=2
+    n_rows=3
 
     ###########################################
 
@@ -49,37 +50,32 @@ if __name__ == '__main__':
         n_cols+=1
     print("n_cols: ", n_cols)
 
-    fig, axs = plt.subplots(n_rows, n_cols, subplot_kw={'projection': '3d'}, figsize=(24, 24), squeeze=False)
-    fig.suptitle('Comparativa entre densidad de obstáculos, distancia entre origen y destino, y número de pasos del algoritmo')
-    for i in range(n_rows):
-        for j in range(n_cols):
-            if((i*n_cols+j)<=(N_max-N_min)):
-                axs[i][j].set_title(f'Mapa de {(i*n_cols+j)+N_min}x{(i*n_cols+j)+N_min}x{(i*n_cols+j)+N_min}')
-                axs[i][j].set_xlabel('Densidad (%)')
-                axs[i][j].set_xlim(0, 10)
-                axs[i][j].set_ylabel('Distancia')
-                axs[i][j].set_ylim(0, 1.732*((i*n_cols+j)+N_min)) #(0,sqrt(3)*N])
-                axs[i][j].set_zlabel('Numero de steps')
+    fig1, axs1 = plt.subplots(n_rows, n_cols, figsize=(8, 8), squeeze=False)
+    #fig1.suptitle('Comparativa entre casos de convergencia y de no convergencia')
+    fig1.subplots_adjust(wspace=0.5, hspace=0.7, top=0.88)
 
-            else:
-                axs[i][j].axis('off')
-            
-    
+    fig2, axs2 = plt.subplots(n_rows, n_cols, subplot_kw={'projection': '3d'}, figsize=(8, 8), squeeze=False)
+    #fig2.suptitle('Comparativa entre densidad de obstáculos, distancia entre origen y destino, y número de pasos del algoritmo')
+    fig2.subplots_adjust(wspace=0.8, hspace=0.8)
 
-    fig2, axs2 = plt.subplots(n_rows, n_cols, figsize=(24, 24), squeeze=False)
-    fig2.suptitle('Comparativa entre casos de convergencia y de no convergencia')
-    for i in range(n_rows):
-        for j in range(n_cols):
-            if((i*n_cols+j)<=(N_max-N_min)):
-                axs2[i][j].set_title(f'Mapa de {(i*n_cols+j)+N_min}x{(i*n_cols+j)+N_min}x{(i*n_cols+j)+N_min}')
-                axs2[i][j].set_xlabel('Densidad (%)')
-                axs2[i][j].set_xlim(0, 10)
-                axs2[i][j].set_ylabel('Distancia')
-                axs2[i][j].set_ylim(0, 1.732*((i*n_cols+j)+N_min)) #(0,sqrt(3)*N])
-            else:
-                axs2[i][j].axis('off')
-                    
-    plt.subplots_adjust(wspace=0.5, hspace=0.5)
+    fig3, axs3 = plt.subplots(n_rows, n_cols, figsize=(8, 8), squeeze=False)
+    #fig3.suptitle('Comparativa entre densidad de obstáculos y número de pasos del algoritmo')
+    fig3.subplots_adjust(wspace=0.8, hspace=0.7)
+
+    fig4, axs4 = plt.subplots(n_rows, n_cols, figsize=(8, 8), squeeze=False)
+    #fig4.suptitle('Comparativa entre distancia entre origen y destino y número de pasos del algoritmo')
+    fig4.subplots_adjust(wspace=0.8, hspace=0.7)
+
+    fig5, axs5 = plt.subplots(n_rows, n_cols, figsize=(8, 8), squeeze=False)
+    #fig5.suptitle('Comparativa entre densidad de obstáculos y distancia salvada respecto al óptimo(%)')
+    fig5.subplots_adjust(wspace=0.8, hspace=0.7)
+
+    fig6, axs6 = plt.subplots(n_rows, n_cols, figsize=(8, 8), squeeze=False)
+    #fig6.suptitle('Comparativa entre distancia inicial y distancia salvada respecto al óptimo(%)')
+    fig6.subplots_adjust(wspace=0.8, hspace=0.7)
+
+    qty_N5 = 0
+    qty_N13 = 0
     
 
     with open(filename, newline='') as data_file:
@@ -102,15 +98,110 @@ if __name__ == '__main__':
             M = int(row[3])
             convergence = row[5] #como string
             size_steps = len(ast.literal_eval(row[6]))-1
+            final_step = ast.literal_eval(row[6])[-1]
 
             densidad = 100*M/(N**3)
             distancia = math.sqrt((inicio[0]-goal[0])**2+(inicio[1]-goal[1])**2+(inicio[2]-goal[2])**2)
+            distancia_final = math.sqrt((final_step[0]-goal[0])**2+(final_step[1]-goal[1])**2+(final_step[2]-goal[2])**2)
+            distancia_salvada = (distancia-distancia_final)/distancia*100
 
             if (convergence=="True"):
-                axs[int((N-N_min)/n_cols)][(N-N_min)%n_cols].scatter(densidad, distancia, size_steps, color='g', s=3)
-                axs2[int((N-N_min)/n_cols)][(N-N_min)%n_cols].scatter(densidad, distancia, color='g', s=3)
+                axs1[int((N-N_min)/n_cols)][(N-N_min)%n_cols].scatter(densidad, distancia, color='g', s=3)
+                axs2[int((N-N_min)/n_cols)][(N-N_min)%n_cols].scatter(densidad, distancia, size_steps, color='g', s=3)
+                axs3[int((N-N_min)/n_cols)][(N-N_min)%n_cols].scatter(densidad, size_steps, color='g', s=3)
+                axs4[int((N-N_min)/n_cols)][(N-N_min)%n_cols].scatter(distancia, size_steps, color='g', s=3)
             else:
-                axs2[int((N-N_min)/n_cols)][(N-N_min)%n_cols].scatter(densidad, distancia, color='r', s=3)
-    fig.savefig('analyse_csv/steps_number.png')
-    fig2.savefig('analyse_csv/convergence.png')
-    plt.show()
+                axs1[int((N-N_min)/n_cols)][(N-N_min)%n_cols].scatter(densidad, distancia, color='r', s=3)
+                axs5[int((N-N_min)/n_cols)][(N-N_min)%n_cols].scatter(densidad, distancia_salvada, color='r', s=3)
+                axs6[int((N-N_min)/n_cols)][(N-N_min)%n_cols].scatter(distancia, distancia_final, color='r', s=3)
+
+            if (N==5):
+                qty_N5 += 1
+            if (N==13):
+                qty_N13 += 1
+    print("N5: ", qty_N5)
+    print("N13: ", qty_N13)
+
+    for i in range(n_rows):
+        for j in range(n_cols):
+            if((i*n_cols+j)<=(N_max-N_min)):
+                axs1[i][j].set_title(f'Mapa de {(i*n_cols+j)+N_min}x{(i*n_cols+j)+N_min}x{(i*n_cols+j)+N_min}')
+                axs1[i][j].set_xlabel('Densidad (%)')
+                axs1[i][j].set_xlim(0, 10)
+                axs1[i][j].set_ylabel('Distancia inicial')
+                axs1[i][j].set_ylim(0, 1.732*((i*n_cols+j)+N_min)) #(0,sqrt(3)*N])
+            else:
+                axs1[i][j].axis('off')
+    axs1[0][0].scatter([], [], color='g', s=3, label='Converge')
+    axs1[0][0].scatter([], [], color='r', s=3, label='No converge')
+    fig1.legend(loc='upper center')
+    fig1.savefig('analyse_csv/convergence.png')
+
+    for i in range(n_rows):
+        for j in range(n_cols):
+            if((i*n_cols+j)<=(N_max-N_min)):
+                axs2[i][j].set_title(f'Mapa de {(i*n_cols+j)+N_min}x{(i*n_cols+j)+N_min}x{(i*n_cols+j)+N_min}')
+                axs2[i][j].set_xlabel('Densidad (%)')
+                axs2[i][j].set_xlim(0, 10)
+                axs2[i][j].set_ylabel('Distancia inicial')
+                axs2[i][j].set_ylim(0, 1.732*((i*n_cols+j)+N_min)) #(0,sqrt(3)*N])
+                axs2[i][j].set_zlabel('Numero de steps')
+            else:
+                axs2[i][j].axis('off')
+    fig2.savefig('analyse_csv/steps_number.png')
+
+    for i in range(n_rows):
+        for j in range(n_cols):
+            if((i*n_cols+j)<=(N_max-N_min)):
+                axs3[i][j].set_title(f'Mapa de {(i*n_cols+j)+N_min}x{(i*n_cols+j)+N_min}x{(i*n_cols+j)+N_min}')
+                axs3[i][j].set_xlabel('Densidad (%)')
+                axs3[i][j].set_xlim(0, 10)
+                axs3[i][j].set_ylabel('Numero de steps')
+            else:
+                axs3[i][j].axis('off')
+    fig3.savefig('analyse_csv/steps_numberVdensidad.png')
+
+    for i in range(n_rows):
+        for j in range(n_cols):
+            if((i*n_cols+j)<=(N_max-N_min)):
+                axs4[i][j].set_title(f'Mapa de {(i*n_cols+j)+N_min}x{(i*n_cols+j)+N_min}x{(i*n_cols+j)+N_min}')
+                axs4[i][j].set_xlabel('Distancia inicial')
+                axs4[i][j].set_xlim(0, 1.732*((i*n_cols+j)+N_min)) #(0,sqrt(3)*N])
+                axs4[i][j].set_ylabel('Numero de steps')
+            else:
+                axs4[i][j].axis('off')
+    fig4.savefig('analyse_csv/steps_numberVdistancia.png')
+
+    for i in range(n_rows):
+        for j in range(n_cols):
+            if((i*n_cols+j)<=(N_max-N_min)):
+                axs5[i][j].set_title(f'Mapa de {(i*n_cols+j)+N_min}x{(i*n_cols+j)+N_min}x{(i*n_cols+j)+N_min}')
+                axs5[i][j].set_xlabel('Densidad (%)')
+                axs5[i][j].set_xlim(0, 10)
+                axs5[i][j].set_ylabel('Distancia salvada (%)')
+                axs5[i][j].set_ylim(top=100)
+                axs5[i][j].axhline(y=0, color='black', linestyle='--', alpha=0.75, zorder=0)
+            else:
+                axs5[i][j].axis('off')
+    fig5.savefig('analyse_csv/recorridoVdensidad.png')
+
+    for i in range(n_rows):
+        for j in range(n_cols):
+            if((i*n_cols+j)<=(N_max-N_min)):
+                axs6[i][j].set_title(f'Mapa de {(i*n_cols+j)+N_min}x{(i*n_cols+j)+N_min}x{(i*n_cols+j)+N_min}')
+                axs6[i][j].set_xlabel('Distancia inicial')
+                axs6[i][j].set_xlim(0, 1.732*((i*n_cols+j)+N_min)) #(0,sqrt(3)*N])
+                axs6[i][j].set_ylabel('Distancia final')
+                lims = [
+                    np.min([axs6[i][j].get_xlim(), axs6[i][j].get_ylim()]),  # min of both axes
+                    np.max([axs6[i][j].get_xlim(), axs6[i][j].get_ylim()]),  # max of both axes
+                ]
+                axs6[i][j].plot(lims, lims, 'k--', alpha=0.75, zorder=0)
+                axs6[i][j].set_aspect('equal')
+                axs6[i][j].set_xlim(lims)
+                axs6[i][j].set_ylim(lims)
+            else:
+                axs6[i][j].axis('off')
+    fig6.savefig('analyse_csv/recorridoVdistancia.png')
+
+    #plt.show()

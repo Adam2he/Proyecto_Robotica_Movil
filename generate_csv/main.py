@@ -29,14 +29,14 @@ cargar_mapa=False #False o True
 m=2 #Margen de error respecto al goal
 
 N_min=5  # Tamaño minimo de mapa N_min x N_min x N_min
-N_max=14 # Tamaño maximo de mapa N_max x N_max x N_max
+N_max=13 # Tamaño maximo de mapa N_max x N_max x N_max
 
 ocup_max = 10 # Porcentaje maximo de ocupacion
 
 n_endpoints = 3 # Numero de inicios y finales distintos para cada set de obstaculos generado
 
 # Insert here the name of the csv file
-filename = "generate_csv/data_file6.csv"
+filename = "generate_csv/data_file7.csv"
 
 if __name__ == '__main__':
 
