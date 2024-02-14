@@ -1,0 +1,128 @@
+import numpy
+
+from representaciones import *
+from calculo_puntos import *
+from funciones_mapas import *
+from planificador import *
+
+
+from numpy import *
+import math
+import random
+from tqdm import tqdm
+import json
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+import time
+
+m_goal=1 #Constante para el goal
+N=50 #Tamaño del mapa
+goal=[N,N,N] #Destino
+R_soi=5 #Esfera de influencia del obstáculo
+M=50 #Número de obstáculos
+guardar_mapa=False #False o True
+cargar_mapa=False #False o True
+crear_mapa=True
+
+inicio=[0,0,0]
+posicion=inicio
+m=2 #Margen de error respecto al goal
+
+obstacle=[]
+for i in range(M):
+    obstacle+=[[random.randint(0,N),random.randint(0,N),random.randint(0,N)]]
+
+
+def comprobar(goal, m, obstacle, m_goal, R_soi, N):
+    posicion = [0, 0, 0]
+    try:
+        datos = planificador_nuevo_ajustable_pruebas(posicion,goal,m,obstacle,m_goal,R_soi,N)
+    except:
+        datos=[[0,0,0],0]
+    if datos[0] == [0, 0, 0]:
+        y1 = None
+    else:
+        y1 = datos[1]
+    posicion = [0, 0, 0]
+    try:
+        datos = planificador_nuevo_ajustable2(posicion, goal, m, obstacle, m_goal, R_soi, N)
+    except:
+        datos=[[0,0,0],0]
+    if datos[0] == [0, 0, 0]:
+        y2 = 0
+    else:
+        y2 = datos[1]
+    return [y1,y2]
+
+
+def comparar(goal, m, m_goal, R_soi, N):
+    y1=[]
+    y2=[]
+    x=[]
+    for M in range(200):
+        obstacle = []
+        for i in range(M):
+            obstacle += [[random.randint(0, N), random.randint(0, N), random.randint(0, N)]]
+        z=comprobar(goal, m, obstacle, m_goal, R_soi, N)
+        y1+=[z[0]]
+        y2+=[z[1]]
+        x+=[M]
+    # Crear la gráfica de puntos
+    plt.plot(x, y1, color='g', label='Antiguo')
+    plt.plot(x, y2, color='r', label='Nuevo')
+    # Etiquetas de los ejes
+    plt.xlabel('Eje x')
+    plt.ylabel('Eje y')
+    # Título
+    plt.title('Gráfica de puntos')
+    # Mostrar la leyenda
+    plt.legend()
+    # Mostrar la gráfica
+    plt.show()
+
+
+
+
+
+
+
+
+
+
+if __name__ == '__main__':
+    if crear_mapa==True:
+        if cargar_mapa == False:
+            M = len(obstacle)
+            F = inicializa_F(N)
+            gotogoal(goal, F, N, m_goal)
+            for i in range(M):
+                avoidobstacle(obstacle[i], F, N, R_soi)
+            # representar3d_puntos(N,F,M,goal,obstacle,R_soi)
+            # representar2d_movimiento(N,M,goal,obstacle,R_soi,F)
+
+            if guardar_mapa == True:
+                guarda_mapa(F)
+                guarda_variables(m_goal, N, goal, R_soi, M, inicio, obstacle)
+
+
+        else:
+            F = carga_mapa()
+            m_goal, N, goal, R_soi, M, inicio, obstacle = carga_variables()
+
+
+    comparar(goal, m, m_goal, R_soi, N)
+    #datos=planificador_con_representacion(posicion,goal,m,F,obstacle)
+    #representar3d_puntos(N, F, M, goal, obstacle, R_soi)
+    #mapa_y_camino(datos,goal,obstacle)
+
+
+
+
+
+
+
+
+
