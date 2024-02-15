@@ -25,34 +25,29 @@ def planificador(posicion,goal,m,F):
         datos+=posicion
     return datos
 
-def planificador_pruebas(posicion,goal,m,F):
+def planificador_pruebas(posicion,goal,m,F,N):
     datos = []
     cont=0
-    posicion_ant=[0,0,0]
-    posicion_1=[0,0,0]
-    while calcula_distancia(posicion, goal) > m and cont<1000:
-        try:
-            posicion[0] = posicion[0] + F[round(posicion[0])][round(posicion[1])][round(posicion[2])][0]
-        except:
-            posicion[0]=posicion_ant[0]
-        try:
-            posicion[1] = posicion[1] + F[round(posicion[0])][round(posicion[1])][round(posicion[2])][1]
-        except:
-            posicion[1]=posicion_ant[1]
-        try:
-            posicion[2] = posicion[2] + F[round(posicion[0])][round(posicion[1])][round(posicion[2])][2]
-        except:
-            posicion[2]=posicion_ant[2]
+    while calcula_distancia(posicion, goal) > m and cont <1000:
+        p1 = round(posicion[0])
+        p2 = round(posicion[1])
+        p3 = round(posicion[2])
+        if p1 >= N:
+            p1=N-1
+        if p2 >= N:
+            p2=N-1
+        if p3 >= N:
+            p3=N-1
+        posicion[0] = posicion[0] + F[p1][p2][p3][0]
+        posicion[1] = posicion[1] + F[p1][p2][p3][1]
+        posicion[2] = posicion[2] + F[p1][p2][p3][2]
         datos += posicion
-
-        posicion_ant[:]=posicion_1[:]
-        posicion_1[:] = posicion[:]
         cont+=1
-
-    if cont == 1000:
-        return [0, 0, 0], cont
+    if cont==1000:
+        return [0,0,0],cont
     else:
-        return datos, cont
+        return datos,cont
+
 
 def planificador_nuevo(posicion,goal,m,obstacle,m_goal,R_soi):
     datos=[]
@@ -66,6 +61,7 @@ def planificador_nuevo(posicion,goal,m,obstacle,m_goal,R_soi):
         posicion[1] = posicion[1] + fuerzas[1]
         posicion[2] = posicion[2] + fuerzas[2]
         datos+=posicion
+
     return datos
 
 def planificador_con_representacion(posicion,goal,m,F,obstacle):
@@ -176,6 +172,8 @@ def planificador_nuevo_ajustable2(posicion,goal,m,obstacle,m_goal,R_soi,N):
             posicion[2]=posicion_ant[2]
         if calcula_distancia(posicion,posicion_ant) < 0.5:
             R_soi-=0.1
+            if R_soi<4:
+                R_soi=4
         else:
             R_soi=5
         posicion_ant[:]=posicion[:]
@@ -185,6 +183,7 @@ def planificador_nuevo_ajustable2(posicion,goal,m,obstacle,m_goal,R_soi,N):
         return [0,0,0],cont
     else:
         return datos,cont
+
 
 
 
